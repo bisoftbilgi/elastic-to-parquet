@@ -11,7 +11,7 @@ python main.py --elasticsearchUrl https://username:password@localhost:9200/  --i
 Also there are some extra parameters
 
 ````
---limit : if you want to limit number of exported documents , this parameter is genrally used for testing purposes (default is unlimited)
+--limit : if you want to limit number of exported documents , this parameter is generally used for testing purposes (default is unlimited)
 ````
 
 ```
