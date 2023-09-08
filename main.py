@@ -15,11 +15,13 @@ parser.add_argument("--indexName","-i",help="Name of the elasticsearch index to 
 parser.add_argument("--fields","-f",help="Fieldnames to extract (comma seperated like field1,field2)",required=True)
 parser.add_argument("--limit","-l",help="Limit number of rows (0 for all rows)",default=0,required=False)
 parser.add_argument("--chunk",help="Chunk size",default=1000,required=False)
+parser.add_argument("--keepCSV",help="Keep CSV file",action=argparse.BooleanOptionalAction)
+
 warnings.filterwarnings("ignore")
 
 args = parser.parse_args()
-def extractIndex(url,indexName,field_names,chunk_size,limit):
-    print(f"{limit}")
+def extractIndex(url,indexName,field_names,chunk_size,limit,keepCSV):
+    print(f"{limit} {keepCSV}")
     count=0
     es = Elasticsearch([url],verify_certs=False)
     
@@ -29,7 +31,7 @@ def extractIndex(url,indexName,field_names,chunk_size,limit):
         jsonpath_expression = parse(f"$.{f}")
         _fieldPath[f] = jsonpath_expression
     print(fields)
-    #prod-webapi-logs-2023.05.23_1
+
     print("Search started", datetime.now())
     size = es.count(index=indexName)
     size = size["count"]
@@ -91,9 +93,9 @@ def extractIndex(url,indexName,field_names,chunk_size,limit):
         print("No of result",index_offset,datetime.now())
         df.to_csv(f"{indexName}.csv", mode='a',header=False ,index=False)
     duckdb.sql(f" copy (select * from read_csv('{indexName}.csv',AUTO_DETECT=TRUE,HEADER=TRUE,PARALLEL=TRUE)) to '{indexName}.parquet' (format 'PARQUET' )")
-
-    os.remove(f"{indexName}.csv")
+    if not keepCSV:
+        os.remove(f"{indexName}.csv")
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    extractIndex(args.elasticsearchUrl,args.indexName,args.fields,int(args.chunk),int(args.limit))
+    extractIndex(args.elasticsearchUrl,args.indexName,args.fields,int(args.chunk),int(args.limit),args.keepCSV)

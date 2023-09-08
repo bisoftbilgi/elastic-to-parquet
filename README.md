@@ -17,3 +17,7 @@ Also there are some extra parameters
 ```
 --chunk : this parameter is used for adjusting scroll size for reading elasticsearch index (default is 1000)
 ```
+
+```
+--keepCSV : this parameter is used to keep CSV file after converting it to parquet format, it is optional if you don't use this paramater intermediate CSV file 
+```
