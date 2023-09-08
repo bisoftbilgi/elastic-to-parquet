@@ -19,5 +19,5 @@ Also there are some extra parameters
 ```
 
 ```
---keepCSV : this parameter is used to keep CSV file after converting it to parquet format, it is optional if you don't use this paramater intermediate CSV file 
+--keepCSV : this parameter is used to keep CSV file after converting it to parquet format, it is optional if you don't use this paramater intermediate CSV file is deleted by default
 ```
